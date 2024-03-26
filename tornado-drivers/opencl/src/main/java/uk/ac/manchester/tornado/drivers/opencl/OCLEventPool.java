@@ -67,7 +67,7 @@ class OCLEventPool {
         this.internalEvent = new OCLEvent();
     }
 
-    protected int registerEvent(long oclEventId, EventDescriptor descriptorId, OCLCommandQueue queue) {
+    protected synchronized int registerEvent(long oclEventId, EventDescriptor descriptorId, OCLCommandQueue queue) {
         if (retain.get(eventIndex)) {
             findNextEventSlot();
         }
@@ -108,7 +108,7 @@ class OCLEventPool {
         guarantee(eventIndex != -1, "event window is full (retained=%d, capacity=%d)", retain.cardinality(), eventPoolSize);
     }
 
-    protected boolean serialiseEvents(int[] dependencies, OCLCommandQueue queue) {
+    protected synchronized boolean serialiseEvents(int[] dependencies, OCLCommandQueue queue) {
         boolean outOfOrderQueue = (queue.getProperties() & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE) == 1;
         if (dependencies == null || dependencies.length == 0 || !outOfOrderQueue) {
             return false;
