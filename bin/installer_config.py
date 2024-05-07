@@ -27,7 +27,9 @@ else:
 __LINUX__ = "linux"
 __APPLE__ = "darwin"
 
+__JDK22__ = "jdk22"
 __JDK21__ = "jdk21"
+__GRAALVM22__ = "graalvm-jdk-22"
 __GRAALVM21__ = "graalvm-jdk-21"
 __MANDREL21__ = "mandrel-jdk-21"
 __CORRETTO21__ = "corretto-jdk-21"
@@ -61,6 +63,17 @@ MAVEN = {
 
 ## JDK
 JDK = {
+
+    __JDK22__: {
+        __LINUX__: {
+            __X86_64__: "https://download.oracle.com/java/22/latest/jdk-22_linux-x64_bin.tar.gz",
+            __ARM__: None,
+        },
+        __APPLE__: {
+            __X86_64__: None,
+            __ARM__: None,
+        },
+    },
     __JDK21__: {
         __LINUX__: {
             __X86_64__: "https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gz",
@@ -69,6 +82,16 @@ JDK = {
         __APPLE__: {
             __X86_64__: "https://download.oracle.com/java/21/latest/jdk-21_macos-x64_bin.tar.gz",
             __ARM__: "https://download.oracle.com/java/21/latest/jdk-21_macos-aarch64_bin.tar.gz",
+        },
+    },
+    __GRAALVM22__: {
+        __LINUX__: {
+            __X86_64__: "https://github.com/graalvm/graalvm-ce-builds/releases/download/jdk-22.0.1/graalvm-community-jdk-22.0.1_linux-x64_bin.tar.gz",
+            __ARM__: None,
+        },
+        __APPLE__: {
+            __X86_64__: None,
+            __ARM__: None,
         },
     },
     __GRAALVM21__: {

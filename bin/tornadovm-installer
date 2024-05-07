@@ -31,10 +31,12 @@ import wget
 import installer_config as config
 
 __DIRECTORY_DEPENDENCIES__ = "etc/dependencies"
-__VERSION__ = "v1.0.1-dev"
+__VERSION__ = "v1.0.5-dev"
 
 __SUPPORTED_JDKS__ = [
+    config.__JDK22__,
     config.__JDK21__,
+    config.__GRAALVM22__,
     config.__GRAALVM21__,
     config.__CORRETTO21__,
     config.__MICROSOFT20__,
@@ -346,7 +348,9 @@ def listSupportedJDKs():
     TornadoVM Installer - Select a JDK implementation to install with TornadoVM:
 
     jdk21            : Install TornadoVM with OpenJDK 21 (Oracle OpenJDK)
+    jdk22            : Install TornadoVM with OpenJDK 22 (Oracle OpenJDK)
     graalvm-jdk-21   : Install TornadoVM with GraalVM and JDK 21 (GraalVM 23.1.0)
+    graalvm-jdk-21   : Install TornadoVM with GraalVM and JDK 22 (GraalVM 22.0.1)
     mandrel-jdk-21   : Install TornadoVM with Mandrel and JDK 21 (GraalVM 23.1.0)
     corretto-jdk-21  : Install TornadoVM with Corretto JDK 21
     zulu-jdk-21      : Install TornadoVM with Azul Zulu JDK 21
