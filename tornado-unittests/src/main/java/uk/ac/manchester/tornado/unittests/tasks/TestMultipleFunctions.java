@@ -156,8 +156,10 @@ public class TestMultipleFunctions extends TornadoTestBase {
             b.set(i, r.nextInt());
         });
 
-        TaskGraph taskGraph = new TaskGraph("s0").transferToDevice(DataTransferMode.EVERY_EXECUTION, a, b).task("t0", TestMultipleFunctions::vectorAddInteger, a, b, c).transferToHost(
-                DataTransferMode.EVERY_EXECUTION, c);
+        TaskGraph taskGraph = new TaskGraph("s0") //
+                .transferToDevice(DataTransferMode.EVERY_EXECUTION, a, b) //
+                .task("t0", TestMultipleFunctions::vectorAddInteger, a, b, c) //
+                .transferToHost(DataTransferMode.EVERY_EXECUTION, c);
 
         ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
         try (TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph)) {
