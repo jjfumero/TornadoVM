@@ -77,6 +77,7 @@ public class OCLXPUBuffer implements XPUBuffer {
     private final Access access;
 
     public OCLXPUBuffer(final OCLDeviceContext device, Object object, Access access) {
+        System.out.println("XPU Field Buffer??? ");
         this.objectType = object.getClass();
         this.deviceContext = device;
         this.logger = new TornadoLogger(this.getClass());
@@ -102,24 +103,9 @@ public class OCLXPUBuffer implements XPUBuffer {
 
             XPUBuffer wrappedField = null;
             if (type.isArray()) {
+                // It is a Java primitive array
                 Object objectFromField = TornadoUtils.getObjectFromField(reflectedField, object);
-                if (type == int[].class) {
-                    wrappedField = new OCLIntArrayWrapper((int[]) objectFromField, device, 0, access);
-                } else if (type == float[].class) {
-                    wrappedField = new OCLFloatArrayWrapper((float[]) objectFromField, device, 0, access);
-                } else if (type == double[].class) {
-                    wrappedField = new OCLDoubleArrayWrapper((double[]) objectFromField, device, 0, access);
-                } else if (type == long[].class) {
-                    wrappedField = new OCLLongArrayWrapper((long[]) objectFromField, device, 0, access);
-                } else if (type == short[].class) {
-                    wrappedField = new OCLShortArrayWrapper((short[]) objectFromField, device, 0, access);
-                } else if (type == char[].class) {
-                    wrappedField = new OCLCharArrayWrapper((char[]) objectFromField, device, 0, access);
-                } else if (type == byte[].class) {
-                    wrappedField = new OCLByteArrayWrapper((byte[]) objectFromField, device, 0, access);
-                } else {
-                    logger.warn("cannot wrap field: array type=%s", type.getName());
-                }
+                wrappedField = getFieldBuffer(type, objectFromField, device);
             } else if (type == FloatArray.class) {
                 Object objectFromField = TornadoUtils.getObjectFromField(reflectedField, object);
                 long size = ((FloatArray) objectFromField).getSegmentWithHeader().byteSize();
@@ -164,6 +150,27 @@ public class OCLXPUBuffer implements XPUBuffer {
         if (buffer == null) {
             buffer = ByteBuffer.allocate((int) getObjectSize());
             buffer.order(deviceContext.getByteOrder());
+        }
+    }
+
+    private XPUBuffer getFieldBuffer(Class<?> type, Object objectFromField, OCLDeviceContext device) {
+        if (type == int[].class) {
+            return new OCLIntArrayWrapper((int[]) objectFromField, device, 0, access);
+        } else if (type == float[].class) {
+            return new OCLFloatArrayWrapper((float[]) objectFromField, device, 0, access);
+        } else if (type == double[].class) {
+            return new OCLDoubleArrayWrapper((double[]) objectFromField, device, 0, access);
+        } else if (type == long[].class) {
+            return new OCLLongArrayWrapper((long[]) objectFromField, device, 0, access);
+        } else if (type == short[].class) {
+            return new OCLShortArrayWrapper((short[]) objectFromField, device, 0, access);
+        } else if (type == char[].class) {
+            return new OCLCharArrayWrapper((char[]) objectFromField, device, 0, access);
+        } else if (type == byte[].class) {
+            return new OCLByteArrayWrapper((byte[]) objectFromField, device, 0, access);
+        } else {
+            logger.warn("cannot wrap field: array type=%s", type.getName());
+            return null;
         }
     }
 
@@ -256,7 +263,6 @@ public class OCLXPUBuffer implements XPUBuffer {
                 }
             }
         }
-
     }
 
     private void serialise(Object object) {
@@ -464,6 +470,11 @@ public class OCLXPUBuffer implements XPUBuffer {
 
     @Override
     public long deallocate() {
+        //        for (FieldBuffer wrappedField : wrappedFields) {
+        //            if (wrappedField != null) {
+        //                wrappedField.deallocate();
+        //            }
+        //        }
         return deviceContext.getBufferProvider().deallocate(access);
     }
 

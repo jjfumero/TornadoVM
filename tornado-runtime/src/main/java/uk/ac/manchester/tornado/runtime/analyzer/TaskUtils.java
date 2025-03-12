@@ -328,6 +328,7 @@ public class TaskUtils {
 
         if (extractCVs) {
             cvs = extractCapturedVariables(code);
+
             numArgs = cvs.length + args.length;
         } else {
             cvs = null;
@@ -347,6 +348,7 @@ public class TaskUtils {
             parameters[index] = arg;
             index++;
         }
+
         return new CompilableTask(meta, id, method, parameters);
     }
 

@@ -623,9 +623,11 @@ public class OCLTornadoDevice implements TornadoXPUDevice {
     @Override
     public synchronized long deallocate(DeviceBufferState deviceBufferState) {
         long deallocatedSpace = 0L;
+        System.out.println("deallocate " + deviceBufferState.isLockedBuffer());
         if (deviceBufferState.isLockedBuffer()) {
             return deallocatedSpace;
         }
+        System.out.println("deallocating ....  " + deviceBufferState.isLockedBuffer());
         deviceBufferState.getXPUBuffer().markAsFreeBuffer();
         if (!TornadoOptions.isReusedBuffersEnabled()) {
             deallocatedSpace = deviceBufferState.getXPUBuffer().deallocate();

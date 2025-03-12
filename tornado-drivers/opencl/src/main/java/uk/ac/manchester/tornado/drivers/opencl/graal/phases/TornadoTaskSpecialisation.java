@@ -23,7 +23,6 @@
  */
 package uk.ac.manchester.tornado.drivers.opencl.graal.phases;
 
-import static uk.ac.manchester.tornado.api.exceptions.TornadoInternalError.unimplemented;
 import static uk.ac.manchester.tornado.runtime.TornadoCoreRuntime.getDebugContext;
 
 import java.lang.reflect.Array;
@@ -59,7 +58,7 @@ import org.graalvm.compiler.phases.common.DeadCodeEliminationPhase;
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaField;
 import uk.ac.manchester.tornado.api.GridScheduler;
-import uk.ac.manchester.tornado.api.exceptions.TornadoBailoutRuntimeException;
+import uk.ac.manchester.tornado.api.exceptions.TornadoInternalError;
 import uk.ac.manchester.tornado.api.types.HalfFloat;
 import uk.ac.manchester.tornado.drivers.common.compiler.phases.analysis.TornadoValueTypeReplacement;
 import uk.ac.manchester.tornado.drivers.common.compiler.phases.loops.TornadoLoopUnroller;
@@ -237,12 +236,19 @@ public class TornadoTaskSpecialisation extends BasePhase<TornadoHighTierContext>
                 node.replaceAtUsages(constant);
                 loadField.clearInputs();
                 graph.removeFixed(loadField);
-            } else if (field.isFinal()) {
+            } else {
                 Object object = lookupRefField(graph, node, value, field.getName());
                 node.usages().forEach(n -> evaluate(graph, n, object));
-            } else if (!field.isFinal()) {
-                throw new TornadoBailoutRuntimeException("Non-final objects introduced via scope are not supported");
             }
+            //            } else if (field.isFinal()) {
+            //                Object object = lookupRefField(graph, node, value, field.getName());
+            //                node.usages().forEach(n -> evaluate(graph, n, object));
+            //            } else if (!field.isFinal()) {
+            //                Object object = lookupRefField(graph, node, value, field.getName());
+            //                System.out.println("Object: " + object);
+            //                node.usages().forEach(n -> evaluate(graph, n, object));
+            //                //throw new TornadoBailoutRuntimeException("Non-final objects introduced via scope are not supported");
+            //            }
         } else if (node instanceof IsNullNode isNullNode) {
             final boolean isNull = (value == null);
             if (isNull) {
@@ -268,8 +274,8 @@ public class TornadoTaskSpecialisation extends BasePhase<TornadoHighTierContext>
             case Float objFloat -> ConstantNode.forFloat(objFloat, graph);
             case Double objDouble -> ConstantNode.forDouble(objDouble, graph);
             case Long objLong -> ConstantNode.forLong(objLong, graph);
-            case Object object -> {
-                unimplemented("createPrimitiveConstantFromObjectParameter: %s", obj);
+            case Object _ -> {
+                TornadoInternalError.unimplemented("createPrimitiveConstantFromObjectParameter: %s", obj);
                 yield null;
             }
         };

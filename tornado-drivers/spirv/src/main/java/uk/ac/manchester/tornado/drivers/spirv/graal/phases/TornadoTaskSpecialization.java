@@ -59,7 +59,6 @@ import org.graalvm.compiler.phases.common.DeadCodeEliminationPhase;
 
 import jdk.vm.ci.meta.JavaKind;
 import jdk.vm.ci.meta.ResolvedJavaField;
-import uk.ac.manchester.tornado.api.exceptions.TornadoBailoutRuntimeException;
 import uk.ac.manchester.tornado.api.types.HalfFloat;
 import uk.ac.manchester.tornado.drivers.common.compiler.phases.analysis.TornadoValueTypeReplacement;
 import uk.ac.manchester.tornado.drivers.common.compiler.phases.loops.TornadoLoopUnroller;
@@ -237,7 +236,9 @@ public class TornadoTaskSpecialization extends BasePhase<TornadoHighTierContext>
                 Object object = lookupRefField(graph, node, value, field.getName());
                 node.usages().forEach(n -> evaluate(graph, n, object));
             } else if (!field.isFinal()) {
-                throw new TornadoBailoutRuntimeException("Non-final objects introduced via scope are not supported");
+                Object object = lookupRefField(graph, node, value, field.getName());
+                node.usages().forEach(n -> evaluate(graph, n, object));
+                //throw new TornadoBailoutRuntimeException("Non-final objects introduced via scope are not supported");
             }
         } else if (node instanceof IsNullNode isNullNode) {
             final boolean isNull = (value == null);
