@@ -224,10 +224,10 @@ public class TornadoOptions {
      *
      * <p>
      * <ul>
-     *   <il>Use <code>-Dtornado.spirv.runtimes=opencl</code> for OpenCL only.
-     *   <il>Use <code>-Dtornado.spirv.runtimes=levelzero</code> for LevelZero only.
-     *   <il>Use <code>-Dtornado.spirv.runtimes=opencl,levelzero</code> for both OpenCL and Level Zero runtimes, being
-     *   OpenCL the first in the list (default).
+     * <il>Use <code>-Dtornado.spirv.runtimes=opencl</code> for OpenCL only.
+     * <il>Use <code>-Dtornado.spirv.runtimes=levelzero</code> for LevelZero only.
+     * <il>Use <code>-Dtornado.spirv.runtimes=opencl,levelzero</code> for both OpenCL and Level Zero runtimes, being
+     * OpenCL the first in the list (default).
      * *</ul>
      * </p>
      */

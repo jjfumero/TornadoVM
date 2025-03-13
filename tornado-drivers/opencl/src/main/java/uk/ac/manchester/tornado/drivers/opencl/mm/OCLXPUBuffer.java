@@ -77,7 +77,6 @@ public class OCLXPUBuffer implements XPUBuffer {
     private final Access access;
 
     public OCLXPUBuffer(final OCLDeviceContext device, Object object, Access access) {
-        System.out.println("XPU Field Buffer??? ");
         this.objectType = object.getClass();
         this.deviceContext = device;
         this.logger = new TornadoLogger(this.getClass());
@@ -470,11 +469,7 @@ public class OCLXPUBuffer implements XPUBuffer {
 
     @Override
     public long deallocate() {
-        //        for (FieldBuffer wrappedField : wrappedFields) {
-        //            if (wrappedField != null) {
-        //                wrappedField.deallocate();
-        //            }
-        //        }
+        // deallocate the object structure
         return deviceContext.getBufferProvider().deallocate(access);
     }
 

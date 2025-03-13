@@ -147,8 +147,10 @@ public class TestFields extends TornadoTestBase {
         Foo foo = new Foo(N);
         foo.initRandom();
 
-        TaskGraph taskGraph = new TaskGraph("s0").transferToDevice(DataTransferMode.FIRST_EXECUTION, foo.a, foo.b).task("t0", foo::computeAdd, foo.a, foo.b, foo.output).transferToHost(
-                DataTransferMode.UNDER_DEMAND, foo.output);
+        TaskGraph taskGraph = new TaskGraph("s0") //
+                .transferToDevice(DataTransferMode.FIRST_EXECUTION, foo.a, foo.b) //
+                .task("t0", foo::computeAdd, foo.a, foo.b, foo.output) //
+                .transferToHost(DataTransferMode.UNDER_DEMAND, foo.output); // 
 
         ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
         try (TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph)) {
@@ -167,8 +169,10 @@ public class TestFields extends TornadoTestBase {
         Foo foo = new Foo(N);
         foo.initRandom();
 
-        TaskGraph taskGraph = new TaskGraph("s0").transferToDevice(DataTransferMode.FIRST_EXECUTION, foo.a, foo.b).task("t0", foo::computeAdd, foo.a, foo.b, foo.output).transferToHost(
-                DataTransferMode.UNDER_DEMAND, foo.output);
+        TaskGraph taskGraph = new TaskGraph("s0") //
+                .transferToDevice(DataTransferMode.FIRST_EXECUTION, foo.a, foo.b) //
+                .task("t0", foo::computeAdd, foo.a, foo.b, foo.output) //
+                .transferToHost(DataTransferMode.UNDER_DEMAND, foo.output); //
 
         ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
         try (TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph)) {
@@ -245,10 +249,10 @@ public class TestFields extends TornadoTestBase {
         indexes.init(1);
         b.someArray.init(2);
 
-        TaskGraph taskGraph = new TaskGraph("s0");
-        taskGraph.transferToDevice(DataTransferMode.EVERY_EXECUTION, a);
-        taskGraph.task("t0", TestFields::setNestedArray, a, indexes);
-        taskGraph.transferToHost(DataTransferMode.EVERY_EXECUTION, a);
+        TaskGraph taskGraph = new TaskGraph("s0") //
+                .transferToDevice(DataTransferMode.EVERY_EXECUTION, a) //
+                .task("t0", TestFields::setNestedArray, a, indexes) //
+                .transferToHost(DataTransferMode.EVERY_EXECUTION, a); //
 
         ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
         try (TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph)) {

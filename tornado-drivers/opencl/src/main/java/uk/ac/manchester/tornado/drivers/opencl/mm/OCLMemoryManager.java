@@ -43,7 +43,7 @@ public class OCLMemoryManager implements TornadoMemoryProvider {
     private final OCLDeviceContext deviceContext;
     private Map<Long, OCLKernelStackFrame> oclKernelStackFrame = new ConcurrentHashMap<>();
     private long constantPointer;
-    private long atomicsRegion = -1;
+    private long atomicPointer = -1;
 
     public OCLMemoryManager(final OCLDeviceContext deviceContext) {
         this.deviceContext = deviceContext;
@@ -95,20 +95,19 @@ public class OCLMemoryManager implements TornadoMemoryProvider {
     }
 
     long toAtomicAddress() {
-        return atomicsRegion;
+        return atomicPointer;
     }
 
     void allocateAtomicRegion() {
-        if (this.atomicsRegion == -1) {
-            this.atomicsRegion = deviceContext.getPlatformContext().createBuffer(OCLMemFlags.CL_MEM_READ_WRITE | OCLMemFlags.CL_MEM_ALLOC_HOST_PTR,
-                    atomicRegionSize()).getBuffer();
+        if (this.atomicPointer == -1) {
+            this.atomicPointer = deviceContext.getPlatformContext().createBuffer(OCLMemFlags.CL_MEM_READ_WRITE | OCLMemFlags.CL_MEM_ALLOC_HOST_PTR, atomicRegionSize()).getBuffer();
         }
     }
 
     void deallocateAtomicRegion() {
-        if (this.atomicsRegion != -1) {
-            deviceContext.getPlatformContext().releaseBuffer(this.atomicsRegion);
-            this.atomicsRegion = -1;
+        if (this.atomicPointer != -1) {
+            deviceContext.getPlatformContext().releaseBuffer(this.atomicPointer);
+            this.atomicPointer = -1;
         }
     }
 
